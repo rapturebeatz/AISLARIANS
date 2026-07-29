@@ -1,0 +1,59 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    // Profile photos
+    match /profiles/{userId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAuth() && request.auth.uid == userId;
+    }
+
+    // Post media
+    match /posts/{postId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAuth();
+    }
+
+    // Chat media
+    match /chat/{roomId}/{allPaths=**} {
+      allow read: if isAuth();
+      allow write: if isAuth();
+    }
+
+    // Gallery
+    match /gallery/{albumId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAuth();
+    }
+
+    // Documents
+    match /documents/{documentId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if getRole() in ['executive', 'administrator', 'super_admin'];
+    }
+
+    // Event banners
+    match /events/{eventId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAuth();
+    }
+
+    // Default: deny all other writes
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    function getUser(uid) {
+      return firestore.get(/databases/(default)/documents/users/$(uid)).data;
+    }
+
+    function getRole() {
+      return getUser(request.auth.uid).role;
+    }
+  }
+}

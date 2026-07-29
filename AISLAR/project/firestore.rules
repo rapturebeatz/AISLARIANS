@@ -1,0 +1,238 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ============ HELPERS ============
+
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function isAdmin(role) {
+      return role in ['administrator', 'super_admin'];
+    }
+
+    function getUser(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data;
+    }
+
+    function getRole(uid) {
+      return getUser(uid).role;
+    }
+
+    function isSelf(uid) {
+      return request.auth.uid == uid;
+    }
+
+    // ============ USERS ============
+
+    match /users/{userId} {
+      allow read: if isAuth();
+      allow create: if isSelf(userId);
+      allow update: if isSelf(userId) || getRole(request.auth.uid) == 'super_admin';
+      allow delete: if getRole(request.auth.uid) == 'super_admin';
+    }
+
+    // ============ PROFILES ============
+
+    match /profiles/{userId} {
+      allow read: if isAuth();
+      allow create: if isSelf(userId);
+      allow update: if isSelf(userId) || getRole(request.auth.uid) == 'super_admin';
+      allow delete: if getRole(request.auth.uid) == 'super_admin';
+    }
+
+    // ============ POSTS ============
+
+    match /posts/{postId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if request.resource.data.authorId == request.auth.uid
+        || getRole(request.auth.uid) in ['moderator', 'administrator', 'super_admin'];
+      allow delete: if getRole(request.auth.uid) in ['moderator', 'administrator', 'super_admin'];
+    }
+
+    // ============ COMMENTS ============
+
+    match /comments/{commentId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if request.resource.data.authorId == request.auth.uid
+        || getRole(request.auth.uid) in ['moderator', 'administrator', 'super_admin'];
+      allow delete: if getRole(request.auth.uid) in ['moderator', 'administrator', 'super_admin'];
+    }
+
+    // ============ LIKES ============
+
+    match /likes/{likeId} {
+      allow read: if isAuth();
+      allow create: if isAuth()
+        && !exists(/databases/$(database)/documents/likes/$(likeId));
+      allow delete: if request.resource.data.userId == request.auth.uid
+        || getRole(request.auth.uid) in ['moderator', 'administrator', 'super_admin'];
+    }
+
+    // ============ CHAT ROOMS ============
+
+    match /chat_rooms/{roomId} {
+      allow read: if isAuth()
+        && request.auth.uid in resource.data.memberIds;
+      allow create: if isAuth();
+      allow update: if isAuth()
+        && request.auth.uid in resource.data.adminIds;
+      allow delete: if getRole(request.auth.uid) == 'super_admin';
+    }
+
+    // ============ MESSAGES ============
+
+    match /messages/{messageId} {
+      allow read: if isAuth()
+        && exists(/databases/$(database)/documents/chat_rooms/$(resource.data.roomId))
+        && request.auth.uid in get(/databases/$(database)/documents/chat_rooms/$(resource.data.roomId)).data.memberIds;
+      allow create: if isAuth();
+      allow update: if resource.data.senderId == request.auth.uid;
+      allow delete: if getRole(request.auth.uid) in ['moderator', 'administrator', 'super_admin'];
+    }
+
+    // ============ EVENTS ============
+
+    match /events/{eventId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if request.resource.data.organizerId == request.auth.uid
+        || getRole(request.auth.uid) in ['executive', 'administrator', 'super_admin'];
+      allow delete: if getRole(request.auth.uid) in ['administrator', 'super_admin'];
+    }
+
+    // ============ ATTENDEES ============
+
+    match /attendees/{attendeeId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if request.resource.data.userId == request.auth.uid
+        || getRole(request.auth.uid) in ['executive', 'administrator', 'super_admin'];
+      allow delete: if getRole(request.auth.uid) in ['administrator', 'super_admin'];
+    }
+
+    // ============ ALBUMS ============
+
+    match /albums/{albumId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if request.resource.data.createdBy == request.auth.uid
+        || getRole(request.auth.uid) in ['executive', 'administrator', 'super_admin'];
+      allow delete: if getRole(request.auth.uid) in ['administrator', 'super_admin'];
+    }
+
+    // ============ PHOTOS ============
+
+    match /photos/{photoId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if request.resource.data.uploadedBy == request.auth.uid
+        || getRole(request.auth.uid) in ['moderator', 'administrator', 'super_admin'];
+      allow delete: if request.resource.data.uploadedBy == request.auth.uid
+        || getRole(request.auth.uid) in ['moderator', 'administrator', 'super_admin'];
+    }
+
+    // ============ VIDEOS ============
+
+    match /videos/{videoId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if request.resource.data.uploadedBy == request.auth.uid
+        || getRole(request.auth.uid) in ['administrator', 'super_admin'];
+      allow delete: if request.resource.data.uploadedBy == request.auth.uid
+        || getRole(request.auth.uid) in ['administrator', 'super_admin'];
+    }
+
+    // ============ DOCUMENTS (LIBRARY) ============
+
+    match /documents/{documentId} {
+      allow read: if isAuth() || resource.data.isPublic == true;
+      allow create: if getRole(request.auth.uid) in ['executive', 'administrator', 'super_admin'];
+      allow update: if getRole(request.auth.uid) in ['administrator', 'super_admin'];
+      allow delete: if getRole(request.auth.uid) == 'super_admin';
+    }
+
+    // ============ BUSINESSES ============
+
+    match /businesses/{businessId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if resource.data.ownerId == request.auth.uid
+        || getRole(request.auth.uid) in ['administrator', 'super_admin'];
+      allow delete: if getRole(request.auth.uid) in ['administrator', 'super_admin'];
+    }
+
+    // ============ JOBS ============
+
+    match /jobs/{jobId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if resource.data.postedBy == request.auth.uid
+        || getRole(request.auth.uid) in ['administrator', 'super_admin'];
+      allow delete: if getRole(request.auth.uid) in ['administrator', 'super_admin'];
+    }
+
+    // ============ POLLS ============
+
+    match /polls/{pollId} {
+      allow read: if isAuth();
+      allow create: if getRole(request.auth.uid) in ['executive', 'administrator', 'super_admin'];
+      allow update: if getRole(request.auth.uid) in ['administrator', 'super_admin'];
+      allow delete: if getRole(request.auth.uid) == 'super_admin';
+    }
+
+    // ============ VOTES ============
+
+    match /votes/{voteId} {
+      allow read: if isAuth();
+      allow create: if isAuth()
+        && !exists(/databases/$(database)/documents/votes/$(voteId));
+      allow delete: if false;
+    }
+
+    // ============ NOTIFICATIONS ============
+
+    match /notifications/{notificationId} {
+      allow read: if isAuth()
+        && resource.data.recipientId == request.auth.uid;
+      allow create: if true;
+      allow update: if resource.data.recipientId == request.auth.uid;
+      allow delete: if resource.data.recipientId == request.auth.uid;
+    }
+
+    // ============ DONATIONS ============
+
+    match /donations/{donationId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if getRole(request.auth.uid) in ['administrator', 'super_admin'];
+      allow delete: if false;
+    }
+
+    // ============ AUDIT LOGS ============
+
+    match /audit_logs/{logId} {
+      allow read: if getRole(request.auth.uid) in ['administrator', 'super_admin'];
+      allow create: if true;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // ============ SETTINGS ============
+
+    match /settings/{settingId} {
+      allow read: if isAuth();
+      allow write: if getRole(request.auth.uid) == 'super_admin';
+    }
+
+    // ============ ROLES ============
+
+    match /roles/{roleId} {
+      allow read: if isAuth();
+      allow write: if getRole(request.auth.uid) == 'super_admin';
+    }
+  }
+}

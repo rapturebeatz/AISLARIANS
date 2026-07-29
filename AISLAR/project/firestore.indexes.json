@@ -1,0 +1,82 @@
+{
+  "indexes": [
+    {"collectionGroup": "profiles", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "country", "order": "ASCENDING"},
+      {"fieldPath": "occupation", "order": "ASCENDING"}
+    ]},
+    {"collectionGroup": "profiles", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "graduationYear", "order": "ASCENDING"},
+      {"fieldPath": "department", "order": "ASCENDING"}
+    ]},
+    {"collectionGroup": "profiles", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "skills", "arrayConfig": "CONTAINS"},
+      {"fieldPath": "country", "order": "ASCENDING"}
+    ]},
+    {"collectionGroup": "posts", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "authorId", "order": "ASCENDING"},
+      {"fieldPath": "createdAt", "order": "DESCENDING"}
+    ]},
+    {"collectionGroup": "posts", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "status", "order": "ASCENDING"},
+      {"fieldPath": "createdAt", "order": "DESCENDING"}
+    ]},
+    {"collectionGroup": "posts", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "isPinned", "order": "DESCENDING"},
+      {"fieldPath": "createdAt", "order": "DESCENDING"}
+    ]},
+    {"collectionGroup": "comments", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "postId", "order": "ASCENDING"},
+      {"fieldPath": "createdAt", "order": "ASCENDING"}
+    ]},
+    {"collectionGroup": "comments", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "parentId", "order": "ASCENDING"},
+      {"fieldPath": "createdAt", "order": "ASCENDING"}
+    ]},
+    {"collectionGroup": "events", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "status", "order": "ASCENDING"},
+      {"fieldPath": "startDate", "order": "ASCENDING"}
+    ]},
+    {"collectionGroup": "events", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "organizerId", "order": "ASCENDING"},
+      {"fieldPath": "startDate", "order": "DESCENDING"}
+    ]},
+    {"collectionGroup": "messages", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "roomId", "order": "ASCENDING"},
+      {"fieldPath": "createdAt", "order": "ASCENDING"}
+    ]},
+    {"collectionGroup": "notifications", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "recipientId", "order": "ASCENDING"},
+      {"fieldPath": "isRead", "order": "ASCENDING"},
+      {"fieldPath": "createdAt", "order": "DESCENDING"}
+    ]},
+    {"collectionGroup": "donations", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "fundType", "order": "ASCENDING"},
+      {"fieldPath": "status", "order": "ASCENDING"}
+    ]},
+    {"collectionGroup": "donations", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "donorId", "order": "ASCENDING"},
+      {"fieldPath": "createdAt", "order": "DESCENDING"}
+    ]},
+    {"collectionGroup": "audit_logs", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "action", "order": "ASCENDING"},
+      {"fieldPath": "createdAt", "order": "DESCENDING"}
+    ]},
+    {"collectionGroup": "jobs", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "category", "order": "ASCENDING"},
+      {"fieldPath": "status", "order": "ASCENDING"}
+    ]},
+    {"collectionGroup": "jobs", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "status", "order": "ASCENDING"},
+      {"fieldPath": "createdAt", "order": "DESCENDING"}
+    ]},
+    {"collectionGroup": "businesses", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "category", "order": "ASCENDING"},
+      {"fieldPath": "status", "order": "ASCENDING"}
+    ]},
+    {"collectionGroup": "polls", "queryScope": "COLLECTION", "fields": [
+      {"fieldPath": "status", "order": "ASCENDING"},
+      {"fieldPath": "endsAt", "order": "ASCENDING"}
+    ]}
+  ],
+  "fieldOverrides": []
+}
