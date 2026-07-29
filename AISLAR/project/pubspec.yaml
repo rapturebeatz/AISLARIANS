@@ -1,0 +1,77 @@
+name: aislar_connect
+description: AISLAR Connect - Alumni Community Platform
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Firebase
+  firebase_core: ^2.25.0
+  firebase_auth: ^4.17.0
+  cloud_firestore: ^4.15.0
+  firebase_storage: ^11.6.0
+  firebase_messaging: ^14.7.0
+  firebase_analytics: ^10.8.0
+
+  # State Management
+  flutter_riverpod: ^2.4.0
+  riverpod_annotation: ^2.3.0
+
+  # Routing
+  go_router: ^13.0.0
+
+  # UI
+  google_fonts: ^6.1.0
+  flutter_svg: ^2.0.5
+  cached_network_image: ^3.3.0
+  shimmer: ^3.0.0
+  image_picker: ^1.0.0
+  photo_view: ^0.15.0
+  flutter_emoji_picker: ^0.0.4
+  video_player: ^2.8.0
+  chewie: ^1.7.0
+
+  # Utilities
+  intl: ^0.19.0
+  uuid: ^4.2.0
+  url_launcher: ^6.2.0
+  share_plus: ^7.2.0
+  qr_flutter: ^4.1.0
+  timeago: ^3.6.0
+  flutter_local_notifications: ^17.0.0
+
+  # Chat
+  flutter_sound: ^9.2.0
+  permission_handler: ^11.2.0
+  file_picker: ^6.1.0
+
+  # Maps
+  geolocator: ^10.1.0
+  geocoding: ^2.1.0
+
+  # Payments
+  paystack_flutter: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  build_runner: ^2.4.0
+  riverpod_generator: ^2.4.0
+  json_serializable: ^6.7.0
+  json_annotation: ^4.8.0
+  mockito: ^5.4.0
+  mocktail: ^1.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/fonts/
+    - assets/l10n/
