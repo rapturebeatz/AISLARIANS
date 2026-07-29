@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../feed/presentation/feed_screen.dart';
+import '../../directory/presentation/directory_screen.dart';
+import '../../profile/presentation/profile_screen.dart';
+
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
@@ -7,7 +11,12 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('AISLAR Connect')),
+      appBar: AppBar(
+        title: const Text('AISLAR Connect'),
+        actions: [
+          IconButton(icon: const Icon(Icons.person), onPressed: () {}),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: GridView.count(
@@ -15,8 +24,8 @@ class DashboardScreen extends StatelessWidget {
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
           children: [
-            _DashboardCard(icon: Icons.people, label: 'Directory', color: Colors.blue, onTap: () {}),
-            _DashboardCard(icon: Icons.article, label: 'Feed', color: Colors.green, onTap: () {}),
+            _DashboardCard(icon: Icons.people, label: 'Directory', color: Colors.blue, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const DirectoryScreen()))),
+            _DashboardCard(icon: Icons.article, label: 'Feed', color: Colors.green, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FeedScreen()))),
             _DashboardCard(icon: Icons.chat, label: 'Chat', color: Colors.orange, onTap: () {}),
             _DashboardCard(icon: Icons.event, label: 'Events', color: Colors.purple, onTap: () {}),
             _DashboardCard(icon: Icons.photo_library, label: 'Gallery', color: Colors.pink, onTap: () {}),
